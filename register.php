@@ -1,3 +1,48 @@
+<?php
+
+$usersJson = file_get_contents('includes/data/user.json');
+$users = json_decode($usersJson, true);
+
+if ($users === null) {
+  die('Erreur lors du chargement des données des utilisateurs.');
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
+  $userId = max(array_keys($users));
+  $userId++;
+  if ($_POST['username']) {
+    $username = $_POST['username'];
+  }
+  if ($_POST['email']) {
+    $email = $_POST['email'];
+  }
+  if ($_POST['preferences']) {
+    $preferences = $_POST['preferences'];
+  }
+  if ($_POST['password'] && $_POST['password-confirmation']) {
+    $password = $_POST['password'];
+    $passwordConfirmation = $_POST['password-confirmation'];
+  }
+  $errors = [];
+
+  if (empty(array_filter($errors, fn($element) => $element !== ''))) {
+    $users = [...$users, [
+      "userId" => $userId,
+      "username" => $username,
+      "email" => $email,
+      "preferences" => $preferences,
+      "password" => $password
+    ],
+    ];
+    file_put_contents('includes/data/user.json', json_encode(($users)));
+    echo "<div class='sucess'> 
+      <h3>Vous êtes inscrit avec succès.</h3> 
+      <p>Cliquez ici pour vous <a href='login.php'>connecter</a></p> 
+    </div>"; 
+  }
+}
+
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,44 +54,28 @@
 <body>
 <div class="container">
 <?php require_once('includes/header.php');?>
-<?php
-
-
-  if (isset($_REQUEST['username'], $_REQUEST['email'], $_REQUEST['password'])){
-    // récupérer le nom d'utilisateur 
-    $username = stripslashes($_REQUEST['username']);
-
-    // récupérer l'email 
-    $email = stripslashes($_REQUEST['email']);
-    
-    // récupérer le mot de passe 
-    $password = stripslashes($_REQUEST['password']);
-  
-    
-    
-
-      if($res){
-        echo "<div class='sucess'>
-              <h3>Vous êtes inscrit avec succès.</h3>
-              <p>Cliquez ici pour vous <a href='login.php'>connecter</a></p>
-        </div>";
-      }
-  }else{
-?>
   <div class="box-container">
-  <h1 class="box-title">S'inscrire</h1>
-  <form action="" method="post">
+  <h1>S'inscrire</h1>
+  <form action="register.php" method="post">
       <div class="form-group">
-        <input type="text" class="box-input" name="username" placeholder="Nom d'utilisateur" required />
-        <input type="text" class="box-input" name="email" placeholder="Courriel" required />
-        <input type="password" class="box-input" name="password" placeholder="Mot de passe" required />
+        <input type="text" name="username" placeholder="Nom d'utilisateur" required />
+        <input type="email" name="email" placeholder="Courriel" required />
+        <div class="preferences">
+          <label for="html"><input type="checkbox" name="preferences[]" value="Italien"> Italien</label>
+          <label for="Vegan"><input type="checkbox" name="preferences[]" value="Vegan"> Vegan</label>
+          <label for="Asiatique"><input type="checkbox" name="preferences[]" value="Asiatique"> Asiatique</label>
+          <label for="Mexicain"><input type="checkbox" name="preferences[]" value="Mexicain"> Mexicain</label>
+          <label for="Français"><input type="checkbox" name="preferences[]" value="Français"> Français</label>
+          <label for="Americain"><input type="checkbox" name="preferences[]" value="Americain"> Américain</label>
+        </div>
+        <input type="password" name="password" placeholder="Mot de passe" required />
+        <input type="password" name="password-confirmation" placeholder="Mot de passe à nouveau" required />
         <button type="submit" name="submit">S'inscrire</button>
         <p class="box-register">Déjà inscrit? 
         <a href="login.php">Connectez-vous ici</a></p>
       </div>
   </form>
   </div>
-<?php } ?>
 </div>
 </body>
 </html>

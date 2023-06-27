@@ -1,33 +1,36 @@
 <?php
 session_start();
+$_SESSION['authenticated'] = false;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
  
   $username = $_POST['username'];
   $password = $_POST['password'];
-
   $usersJson = file_get_contents('includes/data/user.json');
   $users=json_decode($usersJson,true);
 
   if ($users === null) {
     die('Erreur lors du chargement des données des utilisateurs.');
   }
-  
-  foreach ($users as $user) {
-    if ($user['username'] === $username && $user['password'] === $password) {
-      $_SESSION['username'] = $_POST['username'];
-      $_SESSION['authenticated'] = true;
-      $_SESSION['userId'] = $user['userId'];
-      header('Location: index.php');
-      exit;
-    } else {
+
+  if ($_SESSION['authenticated']) {
       echo "<p>Vous êtes déjà connecté en tant que " . $_SESSION['username'] . ".</p>";
       echo "<p><a href=\"logout.php\">Se déconnecter</a></p>";
       echo "<p><a href=\"index.php\">Retour à la page principale</a></p>";
+  } else {
+    foreach ($users as $user) {
+      if ($user['username'] === $username && $user['password'] === $password) {
+        $_SESSION['username'] = $username;
+        $_SESSION['authenticated'] = true;
+        $_SESSION['userId'] = $user['userId'];
+        header('Location: index.php');
+        exit;
+      }
+    }
+    if (!$_SESSION['authenticated']) {
+      $error = 'Nom d\'utilisateur ou mot de passe incorrect.';
     }
   }
-
-$error = 'Nom d\'utilisateur ou mot de passe incorrect.';
 }
 ?>
 <!DOCTYPE html>
