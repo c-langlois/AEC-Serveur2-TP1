@@ -67,6 +67,12 @@
       padding: 10px;
       margin-bottom: 25px;
   }
+  .header-greeting{
+    color: white;
+    font-weight:bold;
+    font-size: 25px;
+
+  }
 
   button {
     display: block;
