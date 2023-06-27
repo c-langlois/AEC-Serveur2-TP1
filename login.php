@@ -14,12 +14,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 
   if ($_SESSION['authenticated']) {
+     // Si l'utilisateur est déjà authentifié, affiche un message et des liens vers les autres pages
       echo "<p>Vous êtes déjà connecté en tant que " . $_SESSION['username'] . ".</p>";
       echo "<p><a href=\"logout.php\">Se déconnecter</a></p>";
       echo "<p><a href=\"index.php\">Retour à la page principale</a></p>";
   } else {
     foreach ($users as $user) {
       if ($user['username'] === $username && $user['password'] === $password) {
+        // Si les informations de connexion sont valides, met à jour la session et redirige vers la page principal
         $_SESSION['username'] = $username;
         $_SESSION['authenticated'] = true;
         $_SESSION['userId'] = $user['userId'];

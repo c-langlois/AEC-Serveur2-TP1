@@ -11,6 +11,7 @@ if ($meals === null) {
 
 $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
   if (!empty($searchTerm)) {
+     // Filtrer les repas en fonction du terme de recherche saisi
     $filteredMeals = array_filter($meals, function ($meal) use ($searchTerm) {
       return stripos($meal['name'], $searchTerm) !== false;
     });
@@ -29,6 +30,7 @@ $priceTerm = isset($_GET['price']) ? $_GET['price'] : '';
     } elseif (stripos($priceTerm, '20Plus') !== false) {
       $min = 20.01;
     }
+     // Filtrer les repas en fonction de la fourchette de prix sélectionnée
     $filteredMeals = array_filter($meals, function ($meal) use ($min, $max) {
       return $min < $meal['price'] && $meal['price'] < $max;
     });
