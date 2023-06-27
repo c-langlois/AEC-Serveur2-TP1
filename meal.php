@@ -49,7 +49,7 @@ if (isset($finalRating)) {
     <div class="box-container">
       <div class="meal-top">
         <img class="meal-img" src="<?= $meal['image'] ?>" alt="<?= $meal['name'] ?>"></img>
-        <!-- <button><img src="./assets/images/share-from-square-regular.svg"></button> -->
+       
         <div class="meal-text">
           <h1><?= $meal['name'] ?></h1>
           <div class="meal-rating">
@@ -70,6 +70,7 @@ if (isset($finalRating)) {
               <p><?= $users[$comment['userId']]['username']?></p>
               <p><img class="stars-review" src="assets/images/<?= $comment['rating'] ?>-star.svg"> </img><?= $comment['short'] ?></p>
               <p><?= $comment['long'] ?></p>
+              <p><img class ="image-comment" src="<?=$comment['image-comment']?>"></img></p>
               </div>
             <?php endforeach; 
             else: ?>

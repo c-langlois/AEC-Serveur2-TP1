@@ -34,17 +34,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
                     "userId" => $userId,
                     "short" => $shortComment,
                     "rating" => $rating,
-                    "long" => $longComment
+                    "long" => $longComment,
+                    "image-comment"=>$photo
                 ],
                 ];
                 $meals[$index] = $meal;
             }
         }
-        file_put_contents('includes/data/meal.json', json_encode($meals));
-        header('Location: index.php');
+        echo '<pre>';
+    print_r($meals);
+    echo '</pre>';
+        // file_put_contents('includes/data/meal.json', json_encode($meals));
+        // header('Location: index.php');
     } 
 
-/*     function debug($variable) {
+   function debug($variable) {
     echo '<pre>';
     print_r($variable);
     echo '</pre>';
@@ -55,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
         $file_extension = strrchr($_FILES['photo']['type'], "/");
         $file_extension = str_replace("/", ".", $file_extension);
         $file_name = date("ymdhs") . $file_extension;
-        $folder = '../photo/';
+        $folder = '/assets/images/';
         $max_size = 5000000;
         $file_size = filesize($tmp_name);
         $extension_array = array('.png', '.jpg', '.jpeg');
@@ -80,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
         else {
             echo '<div>' . $error . '</div>';
         }
-    } */
+    } 
 }
 
 ?>
@@ -101,20 +105,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
         <h1>Ajouter un commentaire</h1>
         <form method="post" action="add_comment.php">
             <div class="form-group">
-                <input type="text" name="short-comment">
-                <select name="rating">
-                    <option value="" disabled selected>Repas préférés</option>
-                    <option value="1">1 étoile</option>
-                    <option value="2">2 étoiles</option>
-                    <option value="3">3 étoiles</option>
-                    <option value="4">4 étoiles</option>
-                    <option value="5">5 étoiles</option>
-                </select>
+                <input type="text" placeholder="Titre de votre commentaire" name="short-comment">
+                <textarea name="long-comment" placeholder="Rédigez votre commentaire" id="" cols="30" rows="10"></textarea>
                 <input type="file" name="photo" accept="image/png, image/jpeg">
                 <input type="hidden" name="meal-id" value=<?= $mealId ?>>
                 <input type="hidden" name="user-id" value=<?= $userId ?>>
                 <select name="rating">
-                    <option value="" disabled selected>Avis</option>
+                    <option value="" disabled selected>Comment l'évalueriez-vous?</option>
                     <option value="1">1 étoile</option>
                     <option value="2">2 étoiles</option>
                     <option value="3">3 étoiles</option>
