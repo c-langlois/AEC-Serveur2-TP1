@@ -2,38 +2,63 @@
 
 session_start();
 
+$errors = [
+  'password' => '',
+];
+
 if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
     header('Location: login.php');
     exit;
 }
 
-$usersJson = file_get_contents('includes/data/user.json');
-$users = json_decode($usersJson, true);
+$filename = 'includes/data/user.json';
+
+if (file_exists($filename)) {
+  $users = json_decode(file_get_contents($filename), true);
+}
 
 if ($users === null) {
   die('Erreur lors du chargement des données des utilisateurs.');
 }
 
-$userId = isset($_GET['userId']) ? $_GET['userId'] : '';
-if ((isset($userId) && $userId !== '')) {
-  $user = $users[$userId];
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['userId'])) {
+  $_GET = filter_input_array(INPUT_GET, [
+    'userId' => FILTER_SANITIZE_NUMBER_INT,
+  ]);
+  $userId = isset($_GET['userId']) ? $_GET['userId'] : '';
+  if ((isset($userId) && $userId !== '')) {
+    $user = $users[$userId];
+  }
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
+  $_POST = filter_input_array(INPUT_POST, [
+    'email' => FILTER_SANITIZE_EMAIL,
+    'preferences' => FILTER_SANITIZE_FULL_SPECIAL_CHARS,
+    'password' => FILTER_SANITIZE_FULL_SPECIAL_CHARS,
+    'password-confirmation' => FILTER_SANITIZE_FULL_SPECIAL_CHARS,
+    'user-id' => FILTER_SANITIZE_NUMBER_INT
+  ]);
+
   if ($_POST['user-id']) {
     $userId = $_POST['user-id'];
-  } // s'assurez que le userId++ quand c'est un nouveau compte
+  } 
+
   if ($_POST['email']) {
     $email = $_POST['email'];
   }
+
   if (isset($_POST['preferences'])) {
     $preferences = $_POST['preferences'];
-  }
+  } 
+  
   if ($_POST['password'] && $_POST['password-confirmation']) {
     $password = $_POST['password'];
     $passwordConfirmation = $_POST['password-confirmation'];
+    if ($password !==  $passwordConfirmation) {
+      $errors['password'] = 'Les deux mots de passe ne sont pas identiques!';
+    }
   }
-  $errors = [];
 
   if (empty(array_filter($errors, fn($element) => $element !== ''))) {
     foreach ($users as $index => $user) {
@@ -51,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
       }
   }
       file_put_contents('includes/data/user.json', json_encode(($users)));
-      header('Location: index.php');
+      header('Location: profil.php');
   }
 }
 
@@ -82,6 +107,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
           <input type="email" name="email" placeholder="Courriel" value="<?= $user['email'] ?? $user['email'] ?>">
           <input type="password" name="password" placeholder="Nouveau mot de passe">
           <input type="password" name="password-confirmation" placeholder="Confirmation nouveau mot de passe">
+          <?php if ($errors['password']) : ?>
+            <p class='text-danger'><?= $errors['password'] ?? '' ?>
+          <?php endif; ?>
           <input type="hidden" name="user-id" value=<?= $user['userId'] ?? $user['userId'] ?>>
           <button type="submit" name="submit">Soumettre</button>
         </div>
