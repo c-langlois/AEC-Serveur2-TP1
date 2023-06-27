@@ -20,13 +20,52 @@ $userId = isset($_SESSION['userId']) ? $_SESSION['userId'] : '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     $shortComment = $_POST['short-comment'];
     $longComment = $_POST['long-comment'];
-    $photo = $_POST['photo'];
+    $photo = $_FILES['photo']['name'];
     $mealId = $_POST['meal-id'];
     $userId = $_POST['user-id'];
     $rating = $_POST['rating'];
     $errors = [];
 
-    //Si il n'y a pas d'erreurs, alors le nouvel article est ajouté au reste.
+    
+
+   function debug($variable) {
+    echo '<pre>';
+    print_r($variable);
+    echo '</pre>';
+    }
+
+    if (isset($_FILES['photo'])) {
+        $tmp_name = $_FILES['photo']['tmp_name'];
+        $file_extension = strrchr($_FILES['photo']['type'], "/");
+        $file_extension = str_replace("/", ".", $file_extension);
+        $file_name = date("ymdhs") . $file_extension;
+        $folder = dirname(__FILE__) . '/assets/images/';
+        $max_size = 5000000;
+        $file_size = filesize($tmp_name);
+        $extension_array = array('.png', '.jpg', '.jpeg');
+        if ($file_size > $max_size) {
+            $error = 'Fichier trop volumineux';
+        }
+
+        if (!in_array($file_extension, $extension_array)) {
+            $error = "Mauvais type de fichier";
+        }
+
+        if(!isset($error)) {
+            if(move_uploaded_file($tmp_name, $folder . $file_name)) {
+                $photo= $file_name;
+                echo "C'est réussi !";
+            }
+
+            else {
+                echo "Ah...il semblerait que ça ne se passe pas comme prévu..";
+            }
+        }
+
+        else {
+            echo '<div>' . $error . '</div>';
+        }
+        //Si il n'y a pas d'erreurs, alors le nouvel article est ajouté au reste.
      if (empty(array_filter($errors, fn($e) => $e !== ''))) {
         foreach ($meals as $index => $meal) {
             if ($meal['id'] === intval($mealId)) {
@@ -41,49 +80,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
                 $meals[$index] = $meal;
             }
         }
-        echo '<pre>';
-    print_r($meals);
-    echo '</pre>';
-        // file_put_contents('includes/data/meal.json', json_encode($meals));
-        // header('Location: index.php');
+        file_put_contents('includes/data/meal.json', json_encode($meals));
+        header('Location: index.php');
     } 
-
-   function debug($variable) {
-    echo '<pre>';
-    print_r($variable);
-    echo '</pre>';
-    }
-
-    if (isset($_FILES['photo'])) {
-        $tmp_name = $_FILES['photo']['tmp_name'];
-        $file_extension = strrchr($_FILES['photo']['type'], "/");
-        $file_extension = str_replace("/", ".", $file_extension);
-        $file_name = date("ymdhs") . $file_extension;
-        $folder = '/assets/images/';
-        $max_size = 5000000;
-        $file_size = filesize($tmp_name);
-        $extension_array = array('.png', '.jpg', '.jpeg');
-        if ($file_size > $max_size) {
-            $error = 'Fichier trop volumineux';
-        }
-
-        if (!in_array($file_extension, $extension_array)) {
-            $error = "Mauvais type de fichier";
-        }
-
-        if(!isset($error)) {
-            if(move_uploaded_file($tmp_name, $folder . $file_name)) {
-                echo "C'est réussi !";
-            }
-
-            else {
-                echo "Ah...il semblerait que ça ne se passe pas comme prévu..";
-            }
-        }
-
-        else {
-            echo '<div>' . $error . '</div>';
-        }
     } 
 }
 
@@ -103,7 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     <?php require_once ('includes/header.php');?>
     <div class="box-container">
         <h1>Ajouter un commentaire</h1>
-        <form method="post" action="add_comment.php">
+        <form method="post" action="add_comment.php" enctype="multipart/form-data">
             <div class="form-group">
                 <input type="text" placeholder="Titre de votre commentaire" name="short-comment">
                 <textarea name="long-comment" placeholder="Rédigez votre commentaire" id="" cols="30" rows="10"></textarea>

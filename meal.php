@@ -70,7 +70,7 @@ if (isset($finalRating)) {
               <p><?= $users[$comment['userId']]['username']?></p>
               <p><img class="stars-review" src="assets/images/<?= $comment['rating'] ?>-star.svg"> </img><?= $comment['short'] ?></p>
               <p><?= $comment['long'] ?></p>
-              <p><img class ="image-comment" src="<?=$comment['image-comment']?>"></img></p>
+              <?php echo !empty($comment['image-comment']) ? '<p><img class ="image-comment" src="assets/images/' . $comment['image-comment'] . '"></img></p>' : '';?>
               </div>
             <?php endforeach; 
             else: ?>
