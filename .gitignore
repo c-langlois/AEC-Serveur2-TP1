@@ -1,0 +1,14 @@
+
+.vscode/
+
+.dockerignore
+
+Archive.zip
+
+includes/.DS_Store
+
+includes/data/meal1.json
+
+includes/data/user1.json
+
+.DS_Store
