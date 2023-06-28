@@ -18,12 +18,17 @@ $mealId = isset($_GET['mealId']) ? $_GET['mealId'] : '';
 $userId = isset($_SESSION['userId']) ? $_SESSION['userId'] : '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
-    $shortComment = $_POST['short-comment'];
-    $longComment = $_POST['long-comment'];
+    $array = $_POST;
+    array_walk_recursive($array, function (&$v) {
+      $v = filter_var(trim($v), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    });
+    $prepared = $array;
+    $shortComment = $prepared['short-comment'];
+    $longComment = $prepared['long-comment'];
     $photo = $_FILES['photo']['name'];
-    $mealId = $_POST['meal-id'];
-    $userId = $_POST['user-id'];
-    $rating = $_POST['rating'];
+    $mealId = $prepared['meal-id'];
+    $userId = $prepared['user-id'];
+    $rating = $prepared['rating'];
     $errors = [];
 
     // Valider les champs du formulaire
