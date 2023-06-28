@@ -29,32 +29,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['userId'])) {
   if ((isset($userId) && $userId !== '')) {
     $user = $users[$userId];
   }
+} else {
+  $user['userId'] = $_POST['user-id'];
+  $user['email'] = $_POST['email'];
 }
 
+
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
-  $_POST = filter_input_array(INPUT_POST, [
+  /* $_POST = filter_input_array(INPUT_POST, [
     'email' => FILTER_SANITIZE_EMAIL,
     'preferences' => FILTER_SANITIZE_FULL_SPECIAL_CHARS,
     'password' => FILTER_SANITIZE_FULL_SPECIAL_CHARS,
     'password-confirmation' => FILTER_SANITIZE_FULL_SPECIAL_CHARS,
     'user-id' => FILTER_SANITIZE_NUMBER_INT
   ]);
+  echo '<pre>';
+  print_r($_POST);
+  echo '</pre>'; */
 
-  if ($_POST['user-id']) {
-    $userId = $_POST['user-id'];
+  $array = $_POST;
+  array_walk_recursive($array, function (&$v) {
+    $v = filter_var(trim($v), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+  });
+  $prepared = $array;
+
+  if ($prepared['user-id']) {
+    $userId = $prepared['user-id'];
   } 
 
-  if ($_POST['email']) {
-    $email = $_POST['email'];
+  if ($prepared['email']) {
+    $email = $prepared['email'];
   }
 
-  if (isset($_POST['preferences'])) {
-    $preferences = $_POST['preferences'];
+  if (isset($prepared['preferences'])) {
+    $preferences = $prepared['preferences'];
   } 
   
-  if ($_POST['password'] && $_POST['password-confirmation']) {
-    $password = $_POST['password'];
-    $passwordConfirmation = $_POST['password-confirmation'];
+  if ($prepared['password'] && $prepared['password-confirmation']) {
+    $password = $prepared['password'];
+    $passwordConfirmation = $prepared['password-confirmation'];
     if ($password !==  $passwordConfirmation) {
       $errors['password'] = 'Les deux mots de passe ne sont pas identiques!';
     }
@@ -76,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
       }
   }
       file_put_contents('includes/data/user.json', json_encode(($users)));
-      header('Location: profil.php');
+      header('Location: profile.php?userId=' . $user['userId']);
   }
 }
 
