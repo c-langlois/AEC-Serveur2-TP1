@@ -211,6 +211,10 @@
   align-items: center;
 }
 
+.image-comment {
+  width: 200px;
+}
+
 .single-review {
   display: flex;
   gap: 10px;
