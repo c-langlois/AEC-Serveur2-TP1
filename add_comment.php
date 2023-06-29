@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
         } else {
             echo '<div>' . $error . '</div>';
         }
-        //Si il n'y a pas d'erreurs, alors le nouvel article est ajouté au reste.
+        //S'il n'y a pas d'erreurs, alors le nouveau commentaire est ajouté au reste.
         if (empty(array_filter($errors, fn ($e) => $e !== ''))) {
             foreach ($meals as $index => $meal) {
                 if ($meal['id'] === intval($mealId)) {

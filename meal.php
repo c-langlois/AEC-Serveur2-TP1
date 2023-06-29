@@ -23,6 +23,7 @@ if ((isset($mealId) && $mealId !== '')) {
   $meal = $meals[$mealId];
 }
 
+// Calcul de la moyenne des étoiles de commentaires et arrondir vers le bas
 $count = 0;
 $i = 0;
 foreach ($meal['comment'] as $comment) {
@@ -32,6 +33,7 @@ foreach ($meal['comment'] as $comment) {
   $finalRating = floor($count / $i);
 }
 
+// Afficher ies étoiles et la quantité de commentaire, ou 0.
 if (isset($finalRating)) {
   $rating = '<img class="stars-review" src="assets/images/' . $finalRating . '-star.svg"></img> (' . $i . ')';
 } else {

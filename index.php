@@ -9,6 +9,9 @@ if ($meals === null) {
   die('Erreur lors du chargement des données des repas.');
 }
 
+$_GET = filter_input_array(INPUT_GET, [
+  'search' => FILTER_SANITIZE_FULL_SPECIAL_CHARS,
+]);
 $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
   if (!empty($searchTerm)) {
      // Filtrer les repas en fonction du terme de recherche saisi
@@ -18,6 +21,9 @@ $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
     $meals = $filteredMeals;
   }
 
+$_GET = filter_input_array(INPUT_GET, [
+  'price' => FILTER_SANITIZE_FULL_SPECIAL_CHARS,
+]);
 $priceTerm = isset($_GET['price']) ? $_GET['price'] : '';
   if (!empty($priceTerm)) {
     $min = 0.0;
