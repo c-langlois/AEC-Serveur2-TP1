@@ -14,6 +14,9 @@ if ($users === null) {
   die('Erreur lors du chargement des données des utilisateurs.');
 }
 // Récupération de l'ID du repas à afficher à partir des paramètres de requête GET
+$_GET = filter_input_array(INPUT_GET, [
+  'id' => FILTER_SANITIZE_FULL_SPECIAL_CHARS
+]);
 $mealId = isset($_GET['id']) ? $_GET['id'] : '';
 if ((isset($mealId) && $mealId !== '')) {
   // Récupération des détails du repas correspondant à l'ID
