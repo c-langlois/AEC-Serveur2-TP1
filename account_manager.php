@@ -37,16 +37,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['userId'])) {
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
-  /* $_POST = filter_input_array(INPUT_POST, [
-    'email' => FILTER_SANITIZE_EMAIL,
-    'preferences' => FILTER_SANITIZE_FULL_SPECIAL_CHARS,
-    'password' => FILTER_SANITIZE_FULL_SPECIAL_CHARS,
-    'password-confirmation' => FILTER_SANITIZE_FULL_SPECIAL_CHARS,
-    'user-id' => FILTER_SANITIZE_NUMBER_INT
-  ]);
-  echo '<pre>';
-  print_r($_POST);
-  echo '</pre>'; */
 
   $array = $_POST;
   array_walk_recursive($array, function (&$v) {

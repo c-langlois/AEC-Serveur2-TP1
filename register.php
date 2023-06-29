@@ -3,6 +3,10 @@
 $usersJson = file_get_contents('includes/data/user.json');
 $users = json_decode($usersJson, true);
 
+$errors = [
+  'password' => '',
+];
+
 if ($users === null) {
   die('Erreur lors du chargement des données des utilisateurs.');
 }
@@ -12,18 +16,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
   $userId = max(array_keys($users));
   $userId++;
   // Récupération des données du formulaire
-  if ($_POST['username']) {
-    $username = $_POST['username'];
+
+  $array = $_POST;
+  array_walk_recursive($array, function (&$v) {
+    $v = filter_var(trim($v), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+  });
+  $prepared = $array;
+  
+  if ($prepared['username']) {
+    $username = $prepared['username'];
   }
-  if ($_POST['email']) {
-    $email = $_POST['email'];
+  if ($prepared['email']) {
+    $email = $prepared['email'];
   }
-  if ($_POST['preferences']) {
-    $preferences = $_POST['preferences'];
+  if ($prepared['preferences']) {
+    $preferences = $prepared['preferences'];
   }
-  if ($_POST['password'] && $_POST['password-confirmation']) {
-    $password = $_POST['password'];
-    $passwordConfirmation = $_POST['password-confirmation'];
+  if ($prepared['password'] && $prepared['password-confirmation']) {
+    $password = $prepared['password'];
+    $passwordConfirmation = $prepared['password-confirmation'];
+    if ($password !==  $passwordConfirmation) {
+      $errors['password'] = 'Les deux mots de passe ne sont pas identiques!';
+    }
   }
   $errors = [];
   // Validation des données du formulaire
@@ -77,6 +91,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
           </div>
           <input type="password" name="password" placeholder="Mot de passe" required />
           <input type="password" name="password-confirmation" placeholder="Mot de passe à nouveau" required />
+          <?php if (isset($errors['password'])) : ?>
+            <p class='text-danger'><?= $errors['password'] ?? '' ?>
+          <?php endif; ?>
           <button type="submit" name="submit">S'inscrire</button>
           <p class="box-register">Déjà inscrit?
             <a href="login.php">Connectez-vous ici</a>
