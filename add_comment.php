@@ -7,6 +7,7 @@ $errors = [
     'photo' => '',
     'rating' => '',
 ];
+$error_photo = '';
 
 // Vérifier si l'utilisateur est authentifié, sinon rediriger vers la page de connexion
 if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
@@ -130,15 +131,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
                 <div class="form-group">
                     <input type="text" placeholder="Titre de votre commentaire" name="short-comment">
                     <?php if ($errors['shortComment']) : ?>
-                            <p class='text-danger'><?= $errors['shortComment'] ?? '' ?></p>
+                        <p class='text-danger'><?= $errors['shortComment'] ?? '' ?></p>
                     <?php endif; ?>
                     <textarea name="long-comment" placeholder="Rédigez votre commentaire" id="" cols="30" rows="10"></textarea>
                     <?php if ($errors['longComment']) : ?>
-                            <p class='text-danger'><?= $errors['longComment'] ?? '' ?></p>
+                        <p class='text-danger'><?= $errors['longComment'] ?? '' ?></p>
                     <?php endif; ?>
                     <input type="file" name="photo" accept="image/png, image/jpeg">
                     <?php if ($error_photo) : ?>
-                            <p class='text-danger'><?= $error_photo ?? '' ?></p>
+                        <p class='text-danger'><?= $error_photo ?? '' ?></p>
                     <?php endif; ?>
                     <input type="hidden" name="meal-id" value=<?= $mealId ?>>
                     <input type="hidden" name="user-id" value=<?= $userId ?>>
