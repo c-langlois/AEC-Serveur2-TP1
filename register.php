@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     $v = filter_var(trim($v), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
   });
   $prepared = $array;
-  
+
   if ($prepared['username']) {
     $username = $prepared['username'];
   }
@@ -93,11 +93,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
           <input type="password" name="password-confirmation" placeholder="Mot de passe à nouveau" required />
           <?php if (isset($errors['password'])) : ?>
             <p class='text-danger'><?= $errors['password'] ?? '' ?>
-          <?php endif; ?>
-          <button type="submit" name="submit">S'inscrire</button>
-          <p class="box-register">Déjà inscrit?
-            <a href="login.php">Connectez-vous ici</a>
-          </p>
+            <?php endif; ?>
+            <button type="submit" name="submit">S'inscrire</button>
+            <p class="box-register">Déjà inscrit?
+              <a href="login.php">Connectez-vous ici</a>
+            </p>
         </div>
       </form>
     </div>
