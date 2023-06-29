@@ -14,6 +14,9 @@ if ($meals === null) {
     die('Erreur lors du chargement des données des repas.');
 }
 // Récupérer l'identifiant du repas à partir des paramètres GET, s'il existe
+$_GET = filter_input_array(INPUT_GET, [
+    'mealId' => FILTER_SANITIZE_NUMBER_INT
+]);
 $mealId = isset($_GET['mealId']) ? $_GET['mealId'] : '';
 $userId = isset($_SESSION['userId']) ? $_SESSION['userId'] : '';
 

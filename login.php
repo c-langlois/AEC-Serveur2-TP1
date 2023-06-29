@@ -4,6 +4,11 @@ $_SESSION['authenticated'] = false;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
  
+  $_POST = filter_input_array(INPUT_POST, [
+    'username' => FILTER_SANITIZE_FULL_SPECIAL_CHARS,
+    'password' => FILTER_SANITIZE_FULL_SPECIAL_CHARS
+  ]);
+
   $username = $_POST['username'];
   $password = $_POST['password'];
   $usersJson = file_get_contents('includes/data/user.json');

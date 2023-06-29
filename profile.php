@@ -15,6 +15,9 @@ if ($users === null) {
   die('Erreur lors du chargement des données des utilisateurs.');
 }
 // Récupération de l'ID de l'utilisateur à afficher à partir des paramètres de requête GET
+$_GET = filter_input_array(INPUT_GET, [
+  'userId' => FILTER_SANITIZE_NUMBER_INT
+]);
 $userId = isset($_GET['userId']) ? $_GET['userId'] : '';
 if ((isset($userId) && $userId !== '')) {
   // Récupération des détails de l'utilisateur correspondant à l'ID
