@@ -4,7 +4,10 @@ $usersJson = file_get_contents('includes/data/user.json');
 $users = json_decode($usersJson, true);
 
 $errors = [
+  'username' => '',
+  'email' => '',
   'password' => '',
+  'password-confirmation' => ''
 ];
 
 if ($users === null) {
@@ -23,23 +26,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
   });
   $prepared = $array;
 
-  if ($prepared['username']) {
-    $username = $prepared['username'];
+  $username = $prepared['username'] ?? '';
+  $email = $prepared['email'] ?? '';
+  $password = $prepared['password'] ?? '';
+  $passwordConfirmation = $prepared['password-confirmation'];
+
+  if (empty($prepared['username'])) {
+    $errors['username'] = 'Le champ Nom d\'utilisateur est requis.';
   }
-  if ($prepared['email']) {
-    $email = $prepared['email'];
+
+  if (empty($prepared['email'])) {
+    $errors['email'] = 'Le champ Courriel est requis.';
   }
-  if ($prepared['preferences']) {
+  if (isset($prepared['preferences'])) {
     $preferences = $prepared['preferences'];
   }
-  if ($prepared['password'] && $prepared['password-confirmation']) {
-    $password = $prepared['password'];
-    $passwordConfirmation = $prepared['password-confirmation'];
-    if ($password !==  $passwordConfirmation) {
-      $errors['password'] = 'Les deux mots de passe ne sont pas identiques!';
-    }
+  if (empty($prepared['password'])) {
+    $errors['password'] = 'Le champ Mot de passe est requis.';
   }
-  $errors = [];
+  if (empty($prepared['password-confirmation'])) {
+    $errors['password'] = 'Le champ Confirmation de mot de passe est requis.';
+  }
+  if ($password !==  $passwordConfirmation) {
+    $errors['password'] = 'Les deux mots de passe ne sont pas identiques!';
+  }
   // Validation des données du formulaire
   // Si aucune erreur n'est présente, on ajoute le nouvel utilisateur et on met à jour le fichier JSON
   if (empty(array_filter($errors, fn ($element) => $element !== ''))) {
@@ -80,7 +90,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
       <form action="register.php" method="post">
         <div class="form-group">
           <input type="text" name="username" placeholder="Nom d'utilisateur" required />
+          <?php if (isset($errors['username'])) : ?>
+            <p class='text-danger'><?= $errors['username'] ?? '' ?>
+          <?php endif; ?>
           <input type="email" name="email" placeholder="Courriel" required />
+          <?php if (isset($errors['email'])) : ?>
+            <p class='text-danger'><?= $errors['email'] ?? '' ?>
+          <?php endif; ?>
           <div class="preferences">
             <label for="html"><input type="checkbox" name="preferences[]" value="Italien"> Italien</label>
             <label for="Vegan"><input type="checkbox" name="preferences[]" value="Vegan"> Vegan</label>
@@ -93,7 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
           <input type="password" name="password-confirmation" placeholder="Mot de passe à nouveau" required />
           <?php if (isset($errors['password'])) : ?>
             <p class='text-danger'><?= $errors['password'] ?? '' ?>
-            <?php endif; ?>
+          <?php endif; ?>
             <button type="submit" name="submit">S'inscrire</button>
             <p class="box-register">Déjà inscrit?
               <a href="login.php">Connectez-vous ici</a>

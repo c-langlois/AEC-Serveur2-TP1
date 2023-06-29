@@ -1,6 +1,13 @@
 <?php
 
 session_start();
+$errors = [
+    'shortComment' => '',
+    'longComment' => '',
+    'photo' => '',
+    'rating' => '',
+];
+
 // Vérifier si l'utilisateur est authentifié, sinon rediriger vers la page de connexion
 if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
     header('Location: login.php');
@@ -26,25 +33,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
         $v = filter_var(trim($v), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     });
     $prepared = $array;
-    $shortComment = $prepared['short-comment'];
-    $longComment = $prepared['long-comment'];
+
+    $shortComment = $prepared['short-comment'] ?? '';
+    $longComment = $prepared['long-comment'] ?? '';
     $photo = $_FILES['photo']['name'];
     $mealId = $prepared['meal-id'];
     $userId = $prepared['user-id'];
-    $rating = $prepared['rating'];
-    $errors = [];
+    $rating = $prepared['rating'] ?? '';
 
     // Valider les champs du formulaire
     if (empty($shortComment)) {
-        $errors['short-comment'] = 'Le champ Titre de votre commentaire est requis.';
+        $errors['shortComment'] = 'Le champ Titre de votre commentaire est requis.';
     }
 
     if (empty($longComment)) {
-        $errors['long-comment'] = 'Le champ Rédigez votre commentaire est requis.';
-    }
-
-    if (empty($photo)) {
-        $errors['photo'] = 'Veuillez sélectionner une photo.';
+        $errors['longComment'] = 'Le champ Rédigez votre commentaire est requis.';
     }
 
     if (empty($rating)) {
@@ -69,22 +72,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
         $file_size = filesize($tmp_name);
         $extension_array = array('.png', '.jpg', '.jpeg');
         if ($file_size > $max_size) {
-            $error = 'Fichier trop volumineux';
+            $error_photo = 'Fichier trop volumineux';
         }
 
         if (!in_array($file_extension, $extension_array)) {
-            $error = "Mauvais type de fichier";
+            $error_photo = "Mauvais type de fichier";
         }
         // Enregistrer le fichier téléchargé dans le dossier d'images
-        if (!isset($error)) {
+        if (!isset($error_photo)) {
             if (move_uploaded_file($tmp_name, $folder . $file_name)) {
                 $photo = $file_name;
-                echo "C'est réussi !";
             } else {
                 echo "Ah...il semblerait que ça ne se passe pas comme prévu..";
             }
-        } else {
-            echo '<div>' . $error . '</div>';
         }
         //S'il n'y a pas d'erreurs, alors le nouveau commentaire est ajouté au reste.
         if (empty(array_filter($errors, fn ($e) => $e !== ''))) {
@@ -129,8 +129,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
             <form method="post" action="add_comment.php" enctype="multipart/form-data">
                 <div class="form-group">
                     <input type="text" placeholder="Titre de votre commentaire" name="short-comment">
+                    <?php if ($errors['shortComment']) : ?>
+                            <p class='text-danger'><?= $errors['shortComment'] ?? '' ?></p>
+                    <?php endif; ?>
                     <textarea name="long-comment" placeholder="Rédigez votre commentaire" id="" cols="30" rows="10"></textarea>
+                    <?php if ($errors['longComment']) : ?>
+                            <p class='text-danger'><?= $errors['longComment'] ?? '' ?></p>
+                    <?php endif; ?>
                     <input type="file" name="photo" accept="image/png, image/jpeg">
+                    <?php if ($error_photo) : ?>
+                            <p class='text-danger'><?= $error_photo ?? '' ?></p>
+                    <?php endif; ?>
                     <input type="hidden" name="meal-id" value=<?= $mealId ?>>
                     <input type="hidden" name="user-id" value=<?= $userId ?>>
                     <select name="rating">
@@ -141,6 +150,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
                         <option value="4">4 étoiles</option>
                         <option value="5">5 étoiles</option>
                     </select>
+                    <?php if ($errors['rating']) : ?>
+                            <p class='text-danger'><?= $errors['rating'] ?? '' ?></p>
+                    <?php endif; ?>
                     <button type="submit" name="submit">Soumettre</button>
                 </div>
             </form>

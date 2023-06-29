@@ -5,6 +5,7 @@ session_start();
 $errors = [
   'password' => '',
 ];
+
 // Redirection vers la page de connexion si l'utilisateur n'est pas authentifié
 if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
   header('Location: login.php');
@@ -17,10 +18,12 @@ $filename = 'includes/data/user.json';
 if (file_exists($filename)) {
   $users = json_decode(file_get_contents($filename), true);
 }
+
 // Vérification du chargement réussi des données utilisateur
 if ($users === null) {
   die('Erreur lors du chargement des données des utilisateurs.');
 }
+
 // Traitement de la requête GET pour récupérer les détails de l'utilisateur
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['userId'])) {
   $_GET = filter_input_array(INPUT_GET, [
@@ -30,11 +33,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['userId'])) {
   if ((isset($userId) && $userId !== '')) {
     $user = $users[$userId];
   }
+
   // Traitement de la requête POST pour mettre à jour les détails de l'utilisateur
 } else {
   $user['userId'] = $_POST['user-id'];
   $user['email'] = $_POST['email'];
 }
+
 // Traitement de la requête POST lorsque le formulaire est soumis
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
 
@@ -65,6 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
       $errors['password'] = 'Les deux mots de passe ne sont pas identiques!';
     }
   }
+  
   // S'il n'y a pas d'erreurs, mettre à jour les données utilisateur
   if (empty(array_filter($errors, fn ($element) => $element !== ''))) {
     foreach ($users as $index => $user) {

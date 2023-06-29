@@ -1,5 +1,9 @@
 <?php
 session_start();
+$errors = [
+  'username' => '',
+  'password' => ''
+];
 $_SESSION['authenticated'] = false;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -9,8 +13,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     'password' => FILTER_SANITIZE_FULL_SPECIAL_CHARS
   ]);
 
-  $username = $_POST['username'];
-  $password = $_POST['password'];
+  $username = $_POST['username'] ?? '';
+  $password = $_POST['password'] ?? '';
+
+  // Valider les champs du formulaire
+  if (empty($username)) {
+    $errors['username'] = 'Le champ Nom d\'utilisateur de votre commentaire est requis.';
+  }
+
+  if (empty($password)) {
+      $errors['password'] = 'Le champ mot de passe est requis.';
+  }
+
   $usersJson = file_get_contents('includes/data/user.json');
   $users = json_decode($usersJson, true);
 
@@ -24,14 +38,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     echo "<p><a href=\"logout.php\">Se déconnecter</a></p>";
     echo "<p><a href=\"index.php\">Retour à la page principale</a></p>";
   } else {
-    foreach ($users as $user) {
-      if ($user['username'] === $username && $user['password'] === $password) {
-        // Si les informations de connexion sont valides, met à jour la session et redirige vers la page principal
-        $_SESSION['username'] = $username;
-        $_SESSION['authenticated'] = true;
-        $_SESSION['userId'] = $user['userId'];
-        header('Location: index.php');
-        exit;
+    if (empty(array_filter($errors, fn ($e) => $e !== ''))) {
+      foreach ($users as $user) {
+        if ($user['username'] === $username && $user['password'] === $password) {
+          // Si les informations de connexion sont valides, met à jour la session et redirige vers la page principal
+          $_SESSION['username'] = $username;
+          $_SESSION['authenticated'] = true;
+          $_SESSION['userId'] = $user['userId'];
+          header('Location: index.php');
+          exit;
+        }
       }
     }
     if (!$_SESSION['authenticated']) {
@@ -61,7 +77,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <form action="login.php" method="POST">
         <div class="form-group">
           <input type="text" id="username" name="username" required placeholder="Nom d'utilisateur">
+          <?php if ($errors['username']) : ?>
+            <p class='text-danger'><?= $errors['username'] ?? '' ?></p>
+          <?php endif; ?>
           <input type="password" id="password" name="password" required placeholder="Mot de passe">
+          <?php if ($errors['password']) : ?>
+            <p class='text-danger'><?= $errors['password'] ?? '' ?></p>
+          <?php endif; ?>
         </div>
         <button type="submit">Entrer</button>
       </form>

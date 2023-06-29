@@ -105,6 +105,10 @@ a:hover {
   color: #1f5c22;
 }
 
+.text-danger {
+  color: red;
+}
+
 .center {
   display: flex;
   justify-content: center;
