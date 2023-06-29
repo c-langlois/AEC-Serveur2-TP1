@@ -23,7 +23,7 @@ $userId = isset($_SESSION['userId']) ? $_SESSION['userId'] : '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     $array = $_POST;
     array_walk_recursive($array, function (&$v) {
-      $v = filter_var(trim($v), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $v = filter_var(trim($v), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     });
     $prepared = $array;
     $shortComment = $prepared['short-comment'];

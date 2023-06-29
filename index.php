@@ -13,35 +13,35 @@ $_GET = filter_input_array(INPUT_GET, [
   'search' => FILTER_SANITIZE_FULL_SPECIAL_CHARS,
 ]);
 $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
-  if (!empty($searchTerm)) {
-     // Filtrer les repas en fonction du terme de recherche saisi
-    $filteredMeals = array_filter($meals, function ($meal) use ($searchTerm) {
-      return stripos($meal['name'], $searchTerm) !== false;
-    });
-    $meals = $filteredMeals;
-  }
+if (!empty($searchTerm)) {
+  // Filtrer les repas en fonction du terme de recherche saisi
+  $filteredMeals = array_filter($meals, function ($meal) use ($searchTerm) {
+    return stripos($meal['name'], $searchTerm) !== false;
+  });
+  $meals = $filteredMeals;
+}
 
 $_GET = filter_input_array(INPUT_GET, [
   'price' => FILTER_SANITIZE_FULL_SPECIAL_CHARS,
 ]);
 $priceTerm = isset($_GET['price']) ? $_GET['price'] : '';
-  if (!empty($priceTerm)) {
-    $min = 0.0;
-    $max = INF;
-    if (stripos($priceTerm, 'minus10') !== false) {
-      $max = 10.00;
-    } elseif (stripos($priceTerm, '10-20') !== false) {
-      $min = 10.01;
-      $max = 20.00;
-    } elseif (stripos($priceTerm, '20Plus') !== false) {
-      $min = 20.01;
-    }
-     // Filtrer les repas en fonction de la fourchette de prix sélectionnée
-    $filteredMeals = array_filter($meals, function ($meal) use ($min, $max) {
-      return $min < $meal['price'] && $meal['price'] < $max;
-    });
-    $meals = $filteredMeals;
+if (!empty($priceTerm)) {
+  $min = 0.0;
+  $max = INF;
+  if (stripos($priceTerm, 'minus10') !== false) {
+    $max = 10.00;
+  } elseif (stripos($priceTerm, '10-20') !== false) {
+    $min = 10.01;
+    $max = 20.00;
+  } elseif (stripos($priceTerm, '20Plus') !== false) {
+    $min = 20.01;
   }
+  // Filtrer les repas en fonction de la fourchette de prix sélectionnée
+  $filteredMeals = array_filter($meals, function ($meal) use ($min, $max) {
+    return $min < $meal['price'] && $meal['price'] < $max;
+  });
+  $meals = $filteredMeals;
+}
 
 function displayMeal($meal)
 {
@@ -74,6 +74,7 @@ function displayMeal($meal)
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -83,14 +84,15 @@ function displayMeal($meal)
 
 <body>
   <div class="container">
-    <?php require_once ('includes/header.php');?>
+    <?php require_once('includes/header.php'); ?>
     <h1>Bienvenue sur FoodieShare</h1>
     <div class="meals">
       <?php foreach ($meals as $meal) : ?>
         <?php displayMeal($meal); ?>
       <?php endforeach; ?>
     </div>
-    <?php require_once ('includes/footer.php');?>
+    <?php require_once('includes/footer.php'); ?>
   </div>
 </body>
+
 </html>
