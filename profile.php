@@ -16,7 +16,7 @@ if ($users === null) {
 }
 // Récupération de l'ID de l'utilisateur à afficher à partir des paramètres de requête GET
 $_GET = filter_input_array(INPUT_GET, [
-  'userId' => FILTER_SANITIZE_FULL_SPECIAL_CHARS
+  'userId' => FILTER_SANITIZE_NUMBER_INT
 ]);
 $userId = isset($_GET['userId']) ? $_GET['userId'] : '';
 if ((isset($userId) && $userId !== '')) {

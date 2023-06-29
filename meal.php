@@ -15,7 +15,7 @@ if ($users === null) {
 }
 // Récupération de l'ID du repas à afficher à partir des paramètres de requête GET
 $_GET = filter_input_array(INPUT_GET, [
-  'id' => FILTER_SANITIZE_FULL_SPECIAL_CHARS
+  'id' => FILTER_SANITIZE_NUMBER_INT
 ]);
 $mealId = isset($_GET['id']) ? $_GET['id'] : '';
 if ((isset($mealId) && $mealId !== '')) {
