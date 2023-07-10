@@ -109,6 +109,10 @@ a:hover {
   color: red;
 }
 
+.text-success {
+  color: green;
+}
+
 .center {
   display: flex;
   justify-content: center;

@@ -28,6 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
 
   $username = $prepared['username'] ?? '';
   $email = $prepared['email'] ?? '';
+
   $password = $prepared['password'] ?? '';
   $passwordConfirmation = $prepared['password-confirmation'];
 
@@ -58,14 +59,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
         "userId" => $userId,
         "username" => $username,
         "email" => $email,
-        "preferences" => $preferences,
-        "password" => $password
+        "preferences" => $preferences ?? '',
+        "password" => password_hash($password, PASSWORD_DEFAULT)
       ],
     ];
     file_put_contents('includes/data/user.json', json_encode(($users)));
     // Affichage d'un message de succès
-    echo "<div class='sucess'> 
-      <h3>Vous êtes inscrit avec succès.</h3> 
+    $login_success = "<div> 
+      <p class='text-success'>Vous êtes inscrit avec succès.</h3> 
       <p>Cliquez ici pour vous <a href='login.php'>connecter</a></p> 
     </div>";
   }
@@ -92,28 +93,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
           <input type="text" name="username" placeholder="Nom d'utilisateur" required />
           <?php if (isset($errors['username'])) : ?>
             <p class='text-danger'><?= $errors['username'] ?? '' ?>
-          <?php endif; ?>
-          <input type="email" name="email" placeholder="Courriel" required />
-          <?php if (isset($errors['email'])) : ?>
+            <?php endif; ?>
+            <input type="email" name="email" placeholder="Courriel" required />
+            <?php if (isset($errors['email'])) : ?>
             <p class='text-danger'><?= $errors['email'] ?? '' ?>
-          <?php endif; ?>
-          <div class="preferences">
-            <label for="html"><input type="checkbox" name="preferences[]" value="Italien"> Italien</label>
-            <label for="Vegan"><input type="checkbox" name="preferences[]" value="Vegan"> Vegan</label>
-            <label for="Asiatique"><input type="checkbox" name="preferences[]" value="Asiatique"> Asiatique</label>
-            <label for="Mexicain"><input type="checkbox" name="preferences[]" value="Mexicain"> Mexicain</label>
-            <label for="Français"><input type="checkbox" name="preferences[]" value="Français"> Français</label>
-            <label for="Americain"><input type="checkbox" name="preferences[]" value="Americain"> Américain</label>
-          </div>
-          <input type="password" name="password" placeholder="Mot de passe" required />
-          <input type="password" name="password-confirmation" placeholder="Mot de passe à nouveau" required />
-          <?php if (isset($errors['password'])) : ?>
-            <p class='text-danger'><?= $errors['password'] ?? '' ?>
-          <?php endif; ?>
-            <button type="submit" name="submit">S'inscrire</button>
-            <p class="box-register">Déjà inscrit?
-              <a href="login.php">Connectez-vous ici</a>
-            </p>
+            <?php endif; ?>
+            <div class="preferences">
+              <label for="Italien"><input type="checkbox" name="preferences[]" value="Italien" id="Italien"> Italien</label>
+              <label for="Vegan"><input type="checkbox" name="preferences[]" value="Vegan" id="Vegan"> Vegan</label>
+              <label for="Asiatique"><input type="checkbox" name="preferences[]" value="Asiatique" id="Asiatique"> Asiatique</label>
+              <label for="Mexicain"><input type="checkbox" name="preferences[]" value="Mexicain" id="Mexicain"> Mexicain</label>
+              <label for="Français"><input type="checkbox" name="preferences[]" value="Français" id="Français"> Français</label>
+              <label for="Americain"><input type="checkbox" name="preferences[]" value="Americain" id="Americain"> Américain</label>
+            </div>
+            <input type="password" name="password" placeholder="Mot de passe" required />
+            <input type="password" name="password-confirmation" placeholder="Mot de passe à nouveau" required />
+            <?php if (isset($errors['password'])) : ?>
+              <p class='text-danger'><?= $errors['password'] ?? '' ?>
+              <p class='text-success'><?= $login_success ?? '' ?>
+              <?php endif; ?>
+              <button type="submit" name="submit">S'inscrire</button>
+              <p class="box-register">Déjà inscrit?
+                <a href="login.php">Connectez-vous ici</a>
+              </p>
         </div>
       </form>
     </div>

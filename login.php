@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 
   if (empty($password)) {
-      $errors['password'] = 'Le champ mot de passe est requis.';
+    $errors['password'] = 'Le champ mot de passe est requis.';
   }
 
   $usersJson = file_get_contents('includes/data/user.json');
@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   } else {
     if (empty(array_filter($errors, fn ($e) => $e !== ''))) {
       foreach ($users as $user) {
-        if ($user['username'] === $username && $user['password'] === $password) {
+        if ($user['username'] === $username && password_verify($password, $user['password'])) {
           // Si les informations de connexion sont valides, met à jour la session et redirige vers la page principal
           $_SESSION['username'] = $username;
           $_SESSION['authenticated'] = true;
