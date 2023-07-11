@@ -7,7 +7,7 @@
         "Mexicain",
         "Americain"
       ],
-      "password": "weinjd17"
+      "password": "$2y$10$6LrHkVXEkQK2QbTIvrnXjuZO7q2zxcvJJoBs7vykNwXjQqx8KKbfS"
     },
     {
       "userId": 1,
@@ -17,7 +17,7 @@
         "Mexicain",
         "Asiatique"
       ],
-      "password": "njkn827"
+      "password": "$2y$10$gt7s9cqtiSCIR2JrTS9hDu3TXFWN3kKrPbeGRzqTqT.9kO8lxwaui"
     },
     {
       "userId": 2,
@@ -27,7 +27,7 @@
         "Asiatique",
         "Americain"
       ],
-      "password": "njkn897"
+      "password": "$2y$10$hYlbtYHSALvu/GauQZ3j3.PiMB5jC4CA0nWwpShhrWRHif5WsYUPK"
     },
     {
       "userId": 3,
@@ -37,7 +37,7 @@
         "Francais",
         "Italien"
       ],
-      "password": "njkl827"
+      "password": "$2y$10$lITmJkxCkRyNYbuCAMkujOb/JTx.kp38FwVAoNJGH6h2yERcWLKve"
     },
     {
       "userId": 4,
@@ -48,7 +48,7 @@
         "Vegan",
         "Asiatique"
       ],
-      "password": "1234"
+      "password": "$2y$10$TP/2lvHALvQlyIG3RSLOPu8y6Fx3QOxfHL7oWEbv.M8uH2Wul1ele"
     },
     {
       "userId": 5,
@@ -59,7 +59,7 @@
         "Asiatique",
         "Fran&ccedil;ais"
       ],
-      "password": "12345"
+      "password": "$2y$10$DMbVpOCxhDjjFqNlOBTRYOu6SbVFlwQyN6eK2S4TEY9PycKEG9H2S"
     },
     {
       "userId": 6,
@@ -78,7 +78,7 @@
       "preferences": [
         "Fran&ccedil;ais"
       ],
-      "password": "$2y$10$IphmYaqM5f.9KalbILtYf.a/bId/60u7extOM/fP0H2Xyn4H5CR4C"
+      "password": "$2y$10$EistW09B7NB.t9Od6aadLejxWQRPCFG4bxkGvt4AyugMr0aWqwcdG"
     },
     {
       "userId": 8,

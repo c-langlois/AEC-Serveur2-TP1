@@ -70,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
       $errors['password'] = 'Les deux mots de passe ne sont pas identiques!';
     }
   }
-  
+
   // S'il n'y a pas d'erreurs, mettre à jour les données utilisateur
   if (empty(array_filter($errors, fn ($element) => $element !== ''))) {
     foreach ($users as $index => $user) {
@@ -82,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
           $user['preferences'] = $preferences;
         }
         if (isset($password)) {
-          $user['password'] = $password;
+          $user['password'] = password_hash($password, PASSWORD_DEFAULT);
         }
         $users[$index] = $user;
       }
